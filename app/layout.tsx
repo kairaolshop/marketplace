@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import AuthProvider from "@/providers/providers";
+import { Toaster } from "sonner";
+import AuthGuard from "@/components/guard/Authguard";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +30,19 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <AuthProvider>
+          <AuthGuard>
+            <Toaster
+              position="top-center"
+              richColors duration={500} closeButton
+              style={{
+                position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -0%)',
+                zIndex: 9999,
+              }}
+            ></Toaster>
+            {children}
+          </AuthGuard>
+        </AuthProvider>
       </body>
     </html>
   );
