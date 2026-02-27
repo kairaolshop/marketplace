@@ -1,6 +1,7 @@
 "use client";
 
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 
 export default function PageName() {
   return (
@@ -9,6 +10,13 @@ export default function PageName() {
       <button 
       className="bg-red-500 p-2"
       onClick={() => signOut({callbackUrl:"/login"})}> keluar</button>
+
+      <button className="bg-green-500 p-2">
+      <Link
+      href="/products">produk
+      </Link>
+        
+      </button>
       
     </main>
   );
