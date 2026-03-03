@@ -1,23 +1,31 @@
-"use client";
+import FilterProducts from "@/components/Filterproduct";
+import Header from "@/components/header"
+import { getProduct } from "@/lib/actions/product";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+import { Suspense } from "react";
 
-import { signOut } from "next-auth/react";
-import Link from "next/link";
-
-export default function PageName() {
+export default async function HomePage() {
+  const session =  await getServerSession(authOptions);
+  const initialProducts =  await getProduct({
+    limit: 4, skip:0, orderBy: 'createdAt', orderDirection:'desc'
+  });
+  const userRole = session?.user?.role || 'Guest'
   return (
-    <main className="p-8">
-      <h1 className="text-2xl font-bold">ini lah page</h1>
-      <button 
-      className="bg-red-500 p-2"
-      onClick={() => signOut({callbackUrl:"/login"})}> keluar</button>
-
-      <button className="bg-green-500 p-2">
-      <Link
-      href="/products">produk
-      </Link>
-        
-      </button>
+    <>
+    <Header session={session}/>
+    <main className="max-w-7xl mx-auto min-h-screen p-2">
       
+      <div className=" items-center px-2 border shadow rounded-lg">
+        <h1 className="p-4 text-xl font-bold text-center ">Produk unggulan</h1>
+        <Suspense fallback={
+          <p>Memuat products...</p>
+        }>
+        <FilterProducts
+        initialProducts={initialProducts}/>
+        </Suspense>
+      </div>
     </main>
-  );
+    </>
+  )
 }
